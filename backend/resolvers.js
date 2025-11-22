@@ -14,7 +14,11 @@ const resolvers = {
 
     // Obtener todos los productos
     async productos() {
-      const [rows] = await db.query("SELECT * FROM producto");
+      const [rows] = await db.query(`
+        SELECT p.*, c.nombre as categoria_nombre, c.descripcion 
+        FROM producto p 
+        LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
+      `);
       return rows;
     },
 
@@ -69,6 +73,52 @@ const resolvers = {
         imagen,
         id_categoria,
       };
+    },
+
+    // Actualizar producto
+    async actualizarProducto(_, { id_producto, nombre, precio, imagen, id_categoria }) {
+      const updates = [];
+      const values = [];
+    
+      if (nombre !== undefined) {
+        updates.push("nombre = ?");
+        values.push(nombre);
+      }
+      if (precio !== undefined) {
+        updates.push("precio = ?");
+        values.push(precio);
+      }
+      if (imagen !== undefined) {
+        updates.push("imagen = ?");
+        values.push(imagen);
+      }
+      if (id_categoria !== undefined) {
+        updates.push("id_categoria = ?");
+        values.push(id_categoria);
+      }
+      
+      if (updates.length === 0) {
+        throw new Error("No se proporcionaron campos para actualizar");
+      }
+      
+      values.push(id_producto);
+      
+      const [result] = await db.query(
+        `UPDATE producto SET ${updates.join(", ")} WHERE id_producto = ?`,
+        values
+      );
+      
+      if (result.affectedRows === 0) {
+        throw new Error("Producto no encontrado");
+      }
+      
+      // Devolver el producto actualizado
+      const [rows] = await db.query(
+        "SELECT * FROM producto WHERE id_producto = ?",
+        [id_producto]
+      );
+      
+      return rows[0];
     },
 
     // Eliminar un producto

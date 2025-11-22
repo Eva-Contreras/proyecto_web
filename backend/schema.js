@@ -1,6 +1,6 @@
 // OPERACIONES DE GRAPHQL
 
-import gql from "graphql-tag";
+import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
   # Tipo CATEGORIA
@@ -16,6 +16,7 @@ const typeDefs = gql`
     nombre: String
     precio: Float
     imagen: String
+    id_categoria: ID!
     categoria: Categoria   # Relación: un producto pertenece a una categoría
   }
 
@@ -35,6 +36,14 @@ const typeDefs = gql`
       precio: Float!
       imagen: String
       id_categoria: ID!
+    ): Producto
+
+    actualizarProducto(
+      id_producto: ID!
+      nombre: String
+      precio: Float
+      imagen: String
+      id_categoria: ID
     ): Producto
 
     eliminarProducto(id_producto: ID!): Boolean
