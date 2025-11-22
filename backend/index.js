@@ -18,7 +18,7 @@ dotenv.config();
 
 async function startServer() {
     const app = express(); // Inicializa Express
-    const port = process.env.PORT || 4000; // Puerto del servidor
+    const port = process.env.PORT || process.env.RAILWAY_STATIC_PORT || 4000; // Puerto del servidor
 
     // Crear servidor Apollo con schema y resolvers
     const server = new ApolloServer({

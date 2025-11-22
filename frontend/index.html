@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante</title>
+    <!--Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--Font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark navbar-custom" style="background-color: #ac7001;">
+            <div class="container">
+                <span class="navbar-brand mb-0 h1"><i class="fa-solid fa-burger" style="color: #e4b021;"></i> Restaurante</span>
+            </div>
+            <button class="btn" style="background-color: #c5921b; color: #fff;">
+                <i class="fa-solid fa-user-shield"></i> Administrador
+            </button>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button">
+                    Ver Menú
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button">
+                    Modificar Precios
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button">
+                    Reporte Inventario
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-3" id="myTabContent">
+            
+            <!-- Pestaña 1: Ver Menú -->
+            <div class="tab-pane fade show active" id="menu" role="tabpanel">
+                <h3>Nuestro Menú</h3>
+                <div id="menu-container" class="row">
+                    <div class="col-12 text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña 2: Modificar Precios -->
+            <div class="tab-pane fade" id="admin" role="tabpanel">
+                <h3>Modificar Productos</h3>
+                <div class="alert alert-info">
+                    Haz click en cualquier producto para editar su precio
+                </div>
+                <div id="admin-container">
+                    <!-- Los productos para editar se cargarán aquí -->
+                </div>
+            </div>
+
+            <!-- Pestaña 3: Reporte Inventario -->
+            <div class="tab-pane fade" id="inventory" role="tabpanel">
+                <h3>Reporte de Inventario</h3>
+                <button class="btn btn-success mb-3" onclick="generarReporte()">
+                    📊 Generar Reporte
+                </button>
+                <div id="reporte-container">
+                    <!-- El reporte se generará aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar precio -->
+    <div class="modal fade" id="editarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-editar">
+                        <input type="hidden" id="edit-id">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="edit-nombre" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="edit-precio" step="0.01" min="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
