@@ -54,9 +54,12 @@ async function startServer() {
         allowedOrigins.push(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
     }
 
+    // Configuración CORS PERMISIVA
     app.use(cors({
-        origin: allowedOrigins,
-        credentials: true
+        origin: true,  // ← Permite ANY origen
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization']
     }));
     
     app.use(express.json());

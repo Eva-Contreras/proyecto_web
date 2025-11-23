@@ -4,83 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurante - Menú</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Tu archivo CSS personalizado -->
     <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
 
+    <!-- Encabezado (Header) -->
     <header>
         <nav class="navbar navbar-dark bg-dark custom-navbar-height">
             <div class="container-fluid d-flex justify-content-between align-items-center px-4">
+                <!-- Título y Logo -->
                 <span class="navbar-brand mb-0 h1 fs-3 fw-bold">
                     <i class="fa-solid fa-burger text-warning"></i> 
                     Restaurante
                 </span>
                 
-                <button class="btn btn-warning rounded-3 fw-bold shadow-sm">
+                <!-- Botón de Administrador -->
+                <button class="btn btn-warning rounded-3 fw-bold shadow-sm" onclick="mostrarAdmin()">
                     <i class="fa-solid fa-user-shield me-2"></i> Administrador
                 </button>
             </div>
         </nav>
     </header>
 
+    <!-- Contenedor Principal (Sidebar y Contenido) -->
     <div class="container-fluid main-content-wrapper">
         <div class="row g-0 full-height-row">
             
+            <!-- Sidebar (Barra de Categorías) -->
             <div class="col-md-3 sidebar bg-white d-flex flex-column p-0 border-end">
                 
+                <!-- Título Menú de la barra lateral -->
                 <div class="sidebar-title d-flex align-items-center justify-content-start ps-4 py-3 border-bottom">
                     <h2 class="fs-4 fw-normal mb-0">Menú</h2>
                 </div>
                 
+                <!-- Botones de Categoría -->
                 <button class="btn btn-light btn-category rounded-0 text-start active-category" data-category="todo">
                     <i class="fa-solid fa-list-ul me-3"></i> Todo
                 </button>
-                <button class="btn btn-light btn-category rounded-0 text-start" data-category="comida">
+                <button class="btn btn-light btn-category rounded-0 text-start" data-category="Comidas">
                     <i class="fa-solid fa-utensils me-3"></i> Comida
                 </button>
-                <button class="btn btn-light btn-category rounded-0 text-start" data-category="bebida">
+                <button class="btn btn-light btn-category rounded-0 text-start" data-category="Bebidas">
                     <i class="fa-solid fa-cocktail me-3"></i> Bebida
                 </button>
-                <button class="btn btn-light btn-category rounded-0 text-start" data-category="complementos">
+                <button class="btn btn-light btn-category rounded-0 text-start" data-category="Complementos">
                     <i class="fa-solid fa-plus-circle me-3"></i> Complementos
                 </button>
-                <button class="btn btn-light btn-category rounded-0 text-start" data-category="postres">
+                <button class="btn btn-light btn-category rounded-0 text-start" data-category="Postres">
                     <i class="fa-solid fa-ice-cream me-3"></i> Postres
                 </button>
             </div>
 
+            <!-- Área de Contenido Principal -->
             <div class="col-md-9 content-area p-4">
-                <h3 class="mb-4">Todo</h3>
-                
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    
-                    <div class="col product-card-col">
-                        <div class="card text-center shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="mb-2 fs-2 product-icon">🍔</div>
-                                <h5 class="card-title">Hamburguesa</h5>
-                                <p class="card-text text-success fw-bold">$85.00</p>
-                            </div>
-                        </div>
+                <!-- Sección Menú (por defecto) -->
+                <div id="menu-section">
+                    <h3 class="mb-4" id="content-title">Todo</h3>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="products-container">
+                        <!-- Productos se renderizarán aquí -->
                     </div>
-                    
-                    <div class="col product-card-col">
-                        <div class="card text-center shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="mb-2 fs-2 product-icon">🍕</div>
-                                <h5 class="card-title">Pizza</h5>
-                                <p class="card-text text-success fw-bold">$120.00</p>
-                            </div>
-                        </div>
-                    </div>
+                </div>
 
+                <!-- Sección Administrador (oculta inicialmente) -->
+                <div id="admin-section" class="d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3>Panel de Administración</h3>
+                        <button class="btn btn-secondary" onclick="mostrarMenu()">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Volver al Menú
+                        </button>
                     </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        Haz click en cualquier producto para editar su precio
+                    </div>
+                    
+                    <div class="row row-cols-1 row-cols-md-2 g-4" id="admin-container">
+                        <!-- Productos para administrar se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar producto -->
+    <div class="modal fade" id="editarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-editar">
+                        <input type="hidden" id="edit-id">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="edit-nombre" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <input type="text" class="form-control" id="edit-categoria" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Precio ($)</label>
+                            <input type="number" class="form-control" id="edit-precio" step="0.01" min="0" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarCambios()">
+                        <i class="fa-solid fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tu JavaScript personalizado -->
+    <script src="app.js"></script> 
 </body>
 </html>
