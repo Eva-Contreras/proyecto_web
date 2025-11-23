@@ -3,42 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurante App - Redirigiendo</title>
+    <title>Restaurante - Redirigiendo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background-color: #f8f9fa;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             margin: 0;
+            padding: 20px;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px;
+        .redirect-container {
+            background: white;
             border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
         }
-        h1 {
+        .logo {
+            color: #2c3e50;
             font-size: 2.5rem;
+            font-weight: bold;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+        }
+        .logo i {
+            color: #ffc107;
         }
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
+            border: 4px solid #e9ecef;
+            border-top: 4px solid #0d6efd;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             animation: spin 1s linear infinite;
             margin: 30px auto;
         }
@@ -46,44 +52,84 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .link {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            border: 2px solid #ffd700;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        .link:hover {
-            background: #ffd700;
-            color: #333;
-        }
         .countdown {
-            font-size: 1.2rem;
-            margin: 15px 0;
+            font-size: 1.3rem;
+            color: #495057;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+            color: white;
+        }
+        .info-text {
+            color: #6c757d;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dee2e6, transparent);
+            margin: 25px 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>
-            <i class="fa-solid fa-utensils"></i>
-            Restaurante App
-        </h1>
-        <p>Te estamos llevando al menú principal...</p>
+    <div class="redirect-container">
+        <!-- Logo igual al header de tu app -->
+        <div class="logo">
+            <i class="fa-solid fa-burger"></i> 
+            Restaurante
+        </div>
         
-        <div class="countdown" id="countdown">Redirigiendo en 3 segundos</div>
+        <div class="divider"></div>
         
+        <h4 class="mb-3" style="color: #2c3e50;">Bienvenido al Sistema de Gestión</h4>
+        
+        <p class="info-text">
+            Estamos cargando tu experiencia personalizada...
+        </p>
+        
+        <!-- Spinner de carga -->
         <div class="spinner"></div>
         
-        <p>Si no redirige automáticamente:</p>
-        <a href="/frontend/index.html" class="link">
-            <i class="fa-solid fa-arrow-right"></i>
-            Haz click aquí para entrar
+        <!-- Countdown -->
+        <div class="countdown" id="countdown">Redirigiendo en 3 segundos</div>
+        
+        <div class="divider"></div>
+        
+        <p class="info-text mb-4">
+            Si la redirección no funciona automáticamente:
+        </p>
+        
+        <!-- Botón igual al de tu app -->
+        <a href="/frontend/index.html" class="btn btn-custom">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            Acceder al Sistema
         </a>
+        
+        <!-- Footer info -->
+        <div class="mt-4">
+            <small class="text-muted">
+                <i class="fa-solid fa-shield-alt me-1"></i>
+                Sistema seguro - Versión 1.0
+            </small>
+        </div>
     </div>
 
     <script>
@@ -100,13 +146,13 @@
             }
         }, 1000);
         
-        // Redirección automática después de 3 segundos (por si el countdown falla)
+        // Redirección automática después de 3 segundos
         setTimeout(function() {
             window.location.href = '/frontend/index.html';
         }, 3000);
     </script>
 
-    <!-- Font Awesome para el icono -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
