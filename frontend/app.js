@@ -4,6 +4,7 @@ const API_URL = 'https://proyecto-web-backend-kwrj.onrender.com/graphql';
 // Variables globales
 let productosGlobal = [];
 let categoriaActual = 'todo';
+let modoAdmin = false;
 
 // Función principal al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
@@ -124,40 +125,65 @@ function renderizarProductos() {
     document.getElementById('content-title').textContent = titulos[categoriaActual] || 'Menú';
 }
 
-// Renderizar productos en panel de administración
+// Renderizar productos en panel de administración (TABLA)
 function renderizarProductosAdmin() {
     const container = document.getElementById('admin-container');
     
-    const html = productosGlobal.map(producto => `
-        <div class="col">
-            <div class="card admin-card h-100" onclick="abrirModalEditar(${producto.id_producto})">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title">${producto.nombre}</h5>
-                            <p class="card-text text-muted">${producto.categoria.nombre}</p>
-                            <p class="price">$${producto.precio}</p>
-                        </div>
-                        <span class="badge bg-secondary">ID: ${producto.id_producto}</span>
-                    </div>
-                    <small class="text-muted">Click para editar precio</small>
-                </div>
-            </div>
-        </div>
+    // Ordenar productos por ID
+    const productosOrdenados = [...productosGlobal].sort((a, b) => a.id_producto - b.id_producto);
+    
+    const html = productosOrdenados.map(producto => `
+        <tr onclick="abrirModalEditar(${producto.id_producto})" style="cursor: pointer;">
+            <td class="fw-bold">${producto.id_producto}</td>
+            <td>
+                <img src="imagenes/${producto.imagen || 'placeholder.jpg'}" 
+                     class="admin-table-img" 
+                     alt="${producto.nombre}"
+                     onerror="this.src='https://via.placeholder.com/50x50/FF6B6B/FFFFFF?text=Imagen'">
+            </td>
+            <td>${producto.nombre}</td>
+            <td class="fw-bold text-success">$${producto.precio}</td>
+            <td><span class="badge bg-secondary">${producto.categoria.nombre}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); abrirModalEditar(${producto.id_producto})">
+                    <i class="fa-solid fa-edit"></i> Editar
+                </button>
+            </td>
+        </tr>
     `).join('');
     
     container.innerHTML = html;
 }
 
-// Funciones para cambiar entre menú y administración
-function mostrarAdmin() {
-    document.getElementById('menu-section').classList.add('d-none');
-    document.getElementById('admin-section').classList.remove('d-none');
-}
-
-function mostrarMenu() {
-    document.getElementById('admin-section').classList.add('d-none');
-    document.getElementById('menu-section').classList.remove('d-none');
+// Función para alternar entre menú y administración
+function toggleModo() {
+    modoAdmin = !modoAdmin;
+    const toggleBtn = document.getElementById('toggleModoBtn');
+    
+    if (modoAdmin) {
+        // Cambiar a modo Administrador
+        document.getElementById('menu-section').classList.add('d-none');
+        document.getElementById('admin-section').classList.remove('d-none');
+        document.body.classList.add('admin-mode');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-utensils me-2"></i> Menú';
+        toggleBtn.classList.remove('btn-warning');
+        toggleBtn.classList.add('btn-success');
+        
+        // Ocultar sidebar
+        document.querySelector('.sidebar').style.display = 'none';
+        
+    } else {
+        // Cambiar a modo Menú
+        document.getElementById('admin-section').classList.add('d-none');
+        document.getElementById('menu-section').classList.remove('d-none');
+        document.body.classList.remove('admin-mode');
+        toggleBtn.innerHTML = '<i class="fa-solid fa-user-shield me-2"></i> Administrador';
+        toggleBtn.classList.remove('btn-success');
+        toggleBtn.classList.add('btn-warning');
+        
+        // Mostrar sidebar
+        document.querySelector('.sidebar').style.display = 'flex';
+    }
 }
 
 // Modal de edición

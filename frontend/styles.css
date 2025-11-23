@@ -120,7 +120,42 @@ body {
 .loading .loading-spinner {
     display: block;
 }
+/* --- Modo Administrador --- */
+.admin-table-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
 
-.loading .content {
-    display: none;
+/* Ocultar sidebar en modo administrador */
+.admin-mode .sidebar {
+    display: none !important;
+}
+
+.admin-mode .content-area {
+    width: 100% !important;
+    margin-left: 0 !important;
+}
+
+/* Asegurar que ocupe todo el ancho */
+.admin-mode .col-md-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* Centrar la tabla */
+.table-responsive {
+    margin: 0 auto;
+}
+
+/* Estilos para la tabla */
+.table th {
+    background-color: #343a40;
+    color: white;
+    font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
 }
