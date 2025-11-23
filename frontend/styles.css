@@ -1,4 +1,105 @@
-.navbar-custom {
-    padding-top: 1.5rem;  /* aumenta espacio arriba */
-    padding-bottom: 1.5rem; /* aumenta espacio abajo */
+/* Variables para consistencia de colores y alturas */
+:root {
+    --header-height: 60px; /* Altura del navbar */
+    --primary-color: #0d6efd; /* Azul de Bootstrap Primary */
+    --success-color: #198754; /* Verde de Bootstrap Success */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #f8f9fa; /* Fondo claro general */
+}
+
+/* --- Encabezado (Header) --- */
+.custom-navbar-height {
+    min-height: var(--header-height);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* --- Contenedor Principal (Wrapper) --- */
+.main-content-wrapper {
+    /* Calculamos la altura total menos la altura del header */
+    height: calc(100vh - var(--header-height)); 
+}
+
+.full-height-row {
+    height: 100%;
+}
+
+/* --- Sidebar (Barra de Categorías) --- */
+.sidebar {
+    height: 100%;
+    /* Asegura que el título del sidebar se vea como en la imagen */
+    border-right: 1px solid #dee2e6;
+}
+
+.sidebar-title {
+    height: 60px; /* Misma altura que un botón */
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.btn-category {
+    width: 100%;
+    height: 60px;
+    font-size: 1.05rem;
+    color: #495057; /* Texto oscuro para el estado inactivo */
+    border-radius: 0; 
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-category:hover:not(.active-category) {
+    background-color: #e9ecef; /* Color gris claro al pasar el ratón */
+    color: #212529;
+}
+
+/* Estilo para la Categoría ACTIVA */
+.active-category {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: bold;
+    /* Un borde lateral azul para énfasis */
+    border-left: 5px solid var(--primary-color);
+    padding-left: calc(1.5rem - 5px); /* Ajusta el padding para compensar el borde */
+}
+
+/* --- Área de Contenido Principal --- */
+.content-area {
+    height: 100%;
+    overflow-y: auto; /* Permite scroll solo en el contenido */
+}
+
+/* --- Tarjetas de Producto --- */
+.product-card-col {
+    max-width: 250px; /* Limita el ancho de las tarjetas */
+}
+
+.card {
+    border: 1px solid #e0e0e0; 
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    /* Mejora el efecto de flotar */
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--primary-color);
+}
+
+.card-text.text-success {
+    font-size: 1.2rem;
+    color: var(--success-color) !important; /* Asegura el color verde */
+}
+
+.product-icon {
+    /* Estiliza los íconos/emojis de los productos */
+    font-size: 2.5rem;
+    margin-bottom: 10px;
 }

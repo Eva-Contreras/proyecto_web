@@ -30,6 +30,7 @@ async function startServer() {
         typeDefs,
         resolvers,
         introspection: true, // Permite introspección en producción
+        playground: true, // Habilita GraphQL Playground
         csrfPrevention: true, // Seguridad adicional
         cache: 'bounded', // Soluciona el warning de tu log
         formatError: (error) => {
