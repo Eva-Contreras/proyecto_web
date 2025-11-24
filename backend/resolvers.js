@@ -14,21 +14,21 @@ const resolvers = {
 
     // Obtener todos los productos
     async productos() {
-      const [rows] = await db.query(`
+      const result = await db.query(`
         SELECT p.*, c.nombre as categoria_nombre, c.descripcion 
         FROM producto p 
         LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
       `);
-      return rows;
+      return result.rows;
     },
 
     // Obtener un producto específico
     async producto(_, { id_producto }) {
-      const [rows] = await db.query(
-        "SELECT * FROM producto WHERE id_producto = ?",
+      const result = await db.query(
+        "SELECT * FROM producto WHERE id_producto = $1",
         [id_producto]
       );
-      return rows[0] || null;
+      return result.rows[0] || null;
     },
   },
 
@@ -36,11 +36,11 @@ const resolvers = {
   Producto: {
     // Resolver la categoría de cada producto
     async categoria(parent) {
-      const [rows] = await db.query(
-        "SELECT * FROM categoria WHERE id_categoria = ?",
+      const result = await db.query(
+        "SELECT * FROM categoria WHERE id_categoria = $1",
         [parent.id_categoria]
       );
-      return rows[0] || null;
+      return result.rows[0] || null;
     },
   },
   
@@ -48,53 +48,48 @@ const resolvers = {
   Mutation: {
     // Agregar una nueva categoría
     async agregarCategoria(_, { nombre }) {
-      const [result] = await db.query(
-        "INSERT INTO categoria (nombre) VALUES (?)",
+      const result = await db.query(
+        "INSERT INTO categoria (nombre) VALUES ($1) RETURNING *",
         [nombre]
       );
-
-      return {
-        id_categoria: result.insertId,
-        nombre,
-      };
+      return result.rows[0];
     },
+
 
     // Agregar un nuevo producto
     async agregarProducto(_, { nombre, precio, imagen, id_categoria }) {
-      const [result] = await db.query(
-        "INSERT INTO producto (nombre, precio, imagen, id_categoria) VALUES (?, ?, ?, ?)",
+      const result = await db.query(
+        "INSERT INTO producto (nombre, precio, imagen, id_categoria) VALUES ($1, $2, $3, $4) RETURNING *",
         [nombre, precio, imagen, id_categoria]
       );
-
-      return {
-        id_producto: result.insertId,
-        nombre,
-        precio,
-        imagen,
-        id_categoria,
-      };
+      return result.rows[0];
     },
 
     // Actualizar producto
     async actualizarProducto(_, { id_producto, nombre, precio, imagen, id_categoria }) {
       const updates = [];
       const values = [];
-    
+      let paramCount = 1;
+      
       if (nombre !== undefined) {
-        updates.push("nombre = ?");
+        updates.push(`nombre = $${paramCount}`);
         values.push(nombre);
+        paramCount++;
       }
       if (precio !== undefined) {
-        updates.push("precio = ?");
+        updates.push(`precio = $${paramCount}`);
         values.push(precio);
+        paramCount++;
       }
       if (imagen !== undefined) {
-        updates.push("imagen = ?");
+        updates.push(`imagen = $${paramCount}`);
         values.push(imagen);
+        paramCount++;
       }
       if (id_categoria !== undefined) {
-        updates.push("id_categoria = ?");
+        updates.push(`id_categoria = $${paramCount}`);
         values.push(id_categoria);
+        paramCount++;
       }
       
       if (updates.length === 0) {
@@ -103,32 +98,26 @@ const resolvers = {
       
       values.push(id_producto);
       
-      const [result] = await db.query(
-        `UPDATE producto SET ${updates.join(", ")} WHERE id_producto = ?`,
+      const result = await db.query(
+        `UPDATE producto SET ${updates.join(", ")} WHERE id_producto = $${paramCount} RETURNING *`,
         values
       );
       
-      if (result.affectedRows === 0) {
+      if (result.rows.length === 0) {
         throw new Error("Producto no encontrado");
       }
       
-      // Devolver el producto actualizado
-      const [rows] = await db.query(
-        "SELECT * FROM producto WHERE id_producto = ?",
-        [id_producto]
-      );
-      
-      return rows[0];
+      return result.rows[0];
     },
 
     // Eliminar un producto
     async eliminarProducto(_, { id_producto }) {
-      const [result] = await db.query(
-        "DELETE FROM producto WHERE id_producto = ?",
+      const result = await db.query(
+        "DELETE FROM producto WHERE id_producto = $1",
         [id_producto]
       );
 
-      return result.affectedRows > 0;
+      return result.rowCount > 0;
     },
   },
 };
