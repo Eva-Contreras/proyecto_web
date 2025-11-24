@@ -8,8 +8,8 @@ const resolvers = {
   Query: {
     // Obtener todas las categorías
     async categorias() {
-      const [rows] = await db.query("SELECT * FROM categoria");
-      return rows;
+      const result = await db.query("SELECT * FROM categoria");
+      return result.rows;
     },
 
     // Obtener todos los productos

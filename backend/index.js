@@ -1,5 +1,4 @@
 // IMPORTACIÓN DE LIBRERIAS
-
 import express from 'express'; // Servidor web que maneja rutas HTTP
 import cors from 'cors'; // Permite que el frontend pueda hacer peticiones desde otro dominio.
 import dotenv from 'dotenv'; // Lee las variables de .env
@@ -15,14 +14,13 @@ import resolvers from './resolvers.js'; // GraphQL resolvers
 dotenv.config();
 
 // CREACIÓN DE FUNCIÓN PARA INICIAR EL SERVIDOR
-
 async function startServer() {
     const app = express(); // Inicializa Express
-    const port = process.env.PORT || 8080; // Railway usa PORT automáticamente
+    const port = process.env.PORT || 4000; // Render usa PORT automáticamente
     
-    // Obtener el dominio de Railway si existe
-    const railwayDomain = process.env.RAILWAY_PUBLIC_DOMAIN 
-        ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
+    // Obtener el dominio de Render (opcional, para logs)
+    const renderDomain = process.env.RENDER_EXTERNAL_URL 
+        ? process.env.RENDER_EXTERNAL_URL 
         : `http://localhost:${port}`;
 
     // Crear servidor Apollo con schema y resolvers
@@ -42,21 +40,9 @@ async function startServer() {
     // Iniciar Apollo Server
     await server.start(); // Inicia Apollo Server antes de usarlo como middleware
 
-    // Configurar CORS dinámicamente según el entorno
-    const allowedOrigins = [
-        'http://localhost:3000',
-        'http://localhost:4000',
-        'https://studio.apollographql.com',
-    ];
-
-    // Si hay dominio de Railway, agregarlo a los orígenes permitidos
-    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
-        allowedOrigins.push(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
-    }
-
-    // Configuración CORS PERMISIVA
+    // Configuración CORS PERMISIVA para Render
     app.use(cors({
-        origin: true,  // ← Permite ANY origen
+        origin: true,  // ← Permite ANY origen (funciona mejor con GitHub Pages)
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization']
@@ -71,21 +57,32 @@ async function startServer() {
         res.send('¡El servidor funciona correctamente!');
     });
 
-    // Health check para Railway
+    // Health check para Render (IMPORTANTE)
     app.get('/health', (req, res) => {
-        res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+        res.status(200).json({ 
+            status: 'ok', 
+            timestamp: new Date().toISOString(),
+            service: 'GraphQL API',
+            version: '1.0.0'
+        });
     });
 
-    // Iniciar Express en 0.0.0.0 para que Railway pueda acceder
+    // Iniciar Express en 0.0.0.0 para que Render pueda acceder
     app.listen(port, '0.0.0.0', () => {
-        console.log(`🚀 Servidor listo en ${railwayDomain}${server.graphqlPath}`);
-        console.log(`📍 Health check disponible en ${railwayDomain}/health`);
+        console.log(`🚀 Servidor listo en ${renderDomain}`);
+        console.log(`📊 GraphQL disponible en ${renderDomain}/graphql`);
+        console.log(`❤️  Health check en ${renderDomain}/health`);
     });
 }
 
 // Manejo de errores no capturados
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled Rejection:', error);
+});
+
+// Manejo de excepciones no capturadas
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
 });
 
 // Ejecutar la función
