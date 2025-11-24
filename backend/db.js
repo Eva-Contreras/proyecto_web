@@ -16,4 +16,4 @@ export const pool = new Pool({
 });
 
 // Exportamos la conexión para usarla en otros archivos
-export default db;
+export default pool;
